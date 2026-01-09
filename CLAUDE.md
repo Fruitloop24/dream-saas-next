@@ -20,17 +20,32 @@ Next.js SaaS starter template powered by Dream API. Auth, billing, and usage tra
 ```bash
 npm install
 cp .env.example .env.local
-# Edit .env.local with your publishable key
+# Add your publishable key to .env.local
 npm run dev
 ```
 
-## Setup Command
+**That's it.** Your SaaS app now has:
+- User authentication (sign up, sign in, sign out)
+- Stripe billing (subscriptions, payment portal)
+- Usage tracking (metered billing ready)
+- Pricing page (pulls tiers from your dashboard)
 
-Run `/setup` for guided configuration:
-1. Get your publishable key
-2. Install dependencies
-3. Configure branding
-4. Done - auth, billing, usage all wired up
+Go check it out at **http://localhost:3000** - click around, try signing up. It all works. **Then come back here** - that was just the foundation.
+
+## Let's Customize This Thing
+
+**Now I can customize almost anything for you:**
+- Brand name, colors, theme (dark/light)
+- Headlines, copy, and messaging for YOUR product
+- Feature lists with custom icons
+- Pricing descriptions and tier benefits
+- Hero images, logos, custom sections
+- Layouts, spacing, styling tweaks
+- Usage dashboard customization
+
+**Just tell me what you're building.** "I'm building an AI writing tool" or "Make it feel more enterprise" - I'll rewrite the copy, pick the right icons, adjust the styling.
+
+Run `/setup` for a guided walkthrough, or just start asking me to change things. This is where it gets fun.
 
 ## File Structure
 
