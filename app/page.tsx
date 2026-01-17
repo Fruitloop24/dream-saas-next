@@ -27,7 +27,7 @@ export default function Landing() {
   // Set sign-up URL on client only (avoids hydration mismatch)
   useEffect(() => {
     setSignUpUrl(dreamAPI.auth.getSignUpUrl({
-      redirect: window.location.origin + '/dashboard'
+      redirect: window.location.origin + '/choose-plan'
     }));
   }, []);
 
@@ -169,8 +169,8 @@ export default function Landing() {
             </div>
           ) : (
             <div className={`grid gap-6 ${tiers.length === 2 ? 'md:grid-cols-2 max-w-3xl mx-auto' : tiers.length >= 3 ? 'md:grid-cols-3' : ''}`}>
-              {tiers.map((tier, i) => {
-                const isPopular = tier.popular || i === Math.floor(tiers.length / 2);
+              {[...tiers].sort((a, b) => a.price - b.price).map((tier, i, sortedTiers) => {
+                const isPopular = tier.popular || (i === Math.floor(sortedTiers.length / 2) && tier.price > 0);
 
                 return (
                   <div

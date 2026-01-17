@@ -77,7 +77,7 @@ interface DreamAPIContextType {
   isSignedIn: boolean;
   user: ClerkUser | null;
   signOut: () => Promise<void>;
-  refreshUser: () => Promise<void>;
+  refreshUser: () => Promise<ClerkUser | null>;
 }
 
 const DreamAPIContext = createContext<DreamAPIContextType | undefined>(undefined);
@@ -99,8 +99,8 @@ export function DreamAPIProvider({ children }: { children: ReactNode }) {
         setUser(dreamApi.auth.getUser());
         setIsReady(true);
       } catch (error) {
-        console.error('Failed to init auth:', error);
-        setIsReady(true); // Still ready, just not signed in
+        console.error('[useDreamAPI] Failed to init auth:', error);
+        setIsReady(true);
       }
     }
     initAuth();
@@ -113,10 +113,12 @@ export function DreamAPIProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
-  const refreshUser = async () => {
-    if (!api) return;
+  const refreshUser = async (): Promise<ClerkUser | null> => {
+    if (!api) return null;
     await api.auth.refreshToken();
-    setUser(api.auth.getUser());
+    const updatedUser = api.auth.getUser();
+    setUser(updatedUser);
+    return updatedUser;
   };
 
   // Create a proxy API that's safe before initialization

@@ -44,7 +44,7 @@ export default function Nav({ showAuthLinks = false, transparent = false }: NavP
   }, []);
 
   const getSignUpUrl = () => dreamAPI.auth.getSignUpUrl({
-    redirect: typeof window !== 'undefined' ? window.location.origin + '/dashboard' : '/dashboard'
+    redirect: typeof window !== 'undefined' ? window.location.origin + '/choose-plan' : '/choose-plan'
   });
 
   const getSignInUrl = () => dreamAPI.auth.getSignInUrl({

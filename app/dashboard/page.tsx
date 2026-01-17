@@ -20,7 +20,7 @@ interface UsageData {
 }
 
 function DashboardContent() {
-  const { api, isReady, isSignedIn, user, refreshUser } = useDreamAPI();
+  const { api, isReady, user } = useDreamAPI();
   const router = useRouter();
 
   const [usage, setUsage] = useState<UsageData | null>(null);
@@ -33,15 +33,15 @@ function DashboardContent() {
   const theme = getThemeClasses();
   const plan = user?.plan || 'free';
 
-  // Redirect if not signed in
+  // Redirect if no user
   useEffect(() => {
-    if (isReady && !isSignedIn) {
+    if (isReady && !user) {
       router.push('/');
     }
-  }, [isReady, isSignedIn, router]);
+  }, [isReady, user, router]);
 
   const fetchUsage = useCallback(async () => {
-    if (!isReady || !isSignedIn) return;
+    if (!isReady || !user) return;
     try {
       const data = await api.usage.check();
       setUsage({
@@ -53,7 +53,7 @@ function DashboardContent() {
     } catch (error) {
       console.error('Failed to fetch usage:', error);
     }
-  }, [api, isReady, isSignedIn]);
+  }, [api, isReady, user]);
 
   // Demo: Track usage when button clicked
   const handleTrackUsage = async () => {
@@ -82,28 +82,26 @@ function DashboardContent() {
     }
   };
 
-  // Handle success redirect from Stripe (only once)
+  // Handle success redirect from Stripe - reload to get fresh data
   useEffect(() => {
     const success = searchParams.get('success');
     if (success === 'true' && !successHandled.current) {
       successHandled.current = true;
       setMessage('Upgrade successful!');
-      window.history.replaceState({}, '', '/dashboard');
-      const refresh = async () => {
-        await refreshUser();
-        await fetchUsage();
-        setTimeout(() => setMessage(''), 3000);
-      };
-      setTimeout(refresh, 1500);
+
+      // Wait for webhook to process, then reload to get fresh data
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 2000);
     }
-  }, [searchParams, refreshUser, fetchUsage]);
+  }, [searchParams]);
 
   // Initial usage fetch
   useEffect(() => {
-    if (isReady && isSignedIn && !successHandled.current) {
+    if (isReady && user && !successHandled.current) {
       fetchUsage();
     }
-  }, [isReady, isSignedIn, fetchUsage]);
+  }, [isReady, user, fetchUsage]);
 
   // Show loading while checking auth
   if (!isReady) {
@@ -114,8 +112,8 @@ function DashboardContent() {
     );
   }
 
-  // Don't render if not signed in (redirect will happen)
-  if (!isSignedIn) {
+  // Don't render if no user (redirect will happen)
+  if (!user) {
     return null;
   }
 

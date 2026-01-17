@@ -14,7 +14,7 @@ import Nav from '@/components/Nav';
 import type { Tier } from '@dream-api/sdk';
 
 export default function ChoosePlanPage() {
-  const { api, isReady, isSignedIn, user } = useDreamAPI();
+  const { api, isReady, user } = useDreamAPI();
   const router = useRouter();
 
   const [tiers, setTiers] = useState<Tier[]>([]);
@@ -26,12 +26,8 @@ export default function ChoosePlanPage() {
   const accent = getAccentClasses();
   const theme = getThemeClasses();
 
-  // Redirect if not signed in
-  useEffect(() => {
-    if (isReady && !isSignedIn) {
-      router.push('/');
-    }
-  }, [isReady, isSignedIn, router]);
+  // Note: Don't redirect here - user may be arriving with __clerk_ticket
+  // The SDK handles ticket consumption in auth.init() before isReady=true
 
   useEffect(() => {
     async function loadTiers() {
@@ -89,11 +85,6 @@ export default function ChoosePlanPage() {
         <div className={`w-6 h-6 border-2 ${theme.progressBg} border-t-current rounded-full animate-spin ${theme.body}`}></div>
       </div>
     );
-  }
-
-  // Don't render if not signed in (redirect will happen)
-  if (!isSignedIn) {
-    return null;
   }
 
   return (
