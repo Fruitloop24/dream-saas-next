@@ -33,7 +33,9 @@ export default function ChoosePlanPage() {
     async function loadTiers() {
       try {
         const response = await dreamAPI.products.listTiers();
-        setTiers(response.tiers || []);
+        // Sort tiers by price ascending (least to greatest)
+        const sortedTiers = (response.tiers || []).sort((a, b) => a.price - b.price);
+        setTiers(sortedTiers);
       } catch (err: unknown) {
         console.error('Failed to load tiers:', err);
         const errorMessage = err instanceof Error ? err.message : 'Failed to load pricing';
@@ -148,7 +150,7 @@ export default function ChoosePlanPage() {
                 </h3>
 
                 <div className="mb-4">
-                  <span className={`text-3xl font-light ${theme.heading}`}>${(tier.price / 100).toFixed(tier.price % 100 === 0 ? 0 : 2)}</span>
+                  <span className={`text-3xl font-light ${theme.heading}`}>${tier.price % 1 === 0 ? tier.price : tier.price.toFixed(2)}</span>
                   <span className={`${theme.body} text-sm`}>/month</span>
                 </div>
 
