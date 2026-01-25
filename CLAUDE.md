@@ -59,6 +59,12 @@ Skip email verification during development:
 
 Run `/setup` for a guided walkthrough, or just start asking me to change things. This is where it gets fun.
 
+## AI Commands
+
+Commands for AI editors (Claude Code, Cursor, Windsurf) are in `.claude/commands/`:
+
+- **`.claude/commands/setup.md`** - Interactive setup wizard for branding, API key, theme
+
 ## File Structure
 
 ```
